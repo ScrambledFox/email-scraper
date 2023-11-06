@@ -4,6 +4,11 @@
             "name": "post.api.url",
             "type": "java.lang.String",
             "description": "URL for the Post API."
+        },
+        {
+            "name": "api.rate-limit",
+            "type": "java.lang.String",
+            "description": "The amount permits per second."
         }
     ]
 }
