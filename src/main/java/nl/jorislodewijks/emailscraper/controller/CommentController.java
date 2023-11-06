@@ -33,11 +33,7 @@ public class CommentController {
     @Autowired
     private CommentRepository commentRepository;
 
-    @GetMapping("/comments")
-    public List<Comment> getComments() {
-        return commentRepository.findAll();
-    }
-
+    // #region Endpoints for external API
     @GetMapping("/posts/{postId}/comments")
     public List<Comment> getComments(@PathVariable Long postId) {
         String url = baseApiUrl + "/" + postId + "/comments";
@@ -60,10 +56,18 @@ public class CommentController {
 
         return comments;
     }
+    // #endregion
 
-    @GetMapping("/emails/{emailAddress}/comments")
+    // #region API endpoints
+    @GetMapping("/api/comments")
+    public List<Comment> getComments() {
+        return commentRepository.findAll();
+    }
+
+    @GetMapping("api/emails/{emailAddress}/comments")
     public List<Comment> getCommentsByEmailAddress(@PathVariable String emailAddress) {
         List<Comment> comments = commentRepository.findAllByEmail(emailAddress);
         return comments;
     }
+    // #endregion
 }
