@@ -1,0 +1,9 @@
+{
+    "properties": [
+        {
+            "name": "post.api.url",
+            "type": "java.lang.String",
+            "description": "URL for the Post API."
+        }
+    ]
+}
