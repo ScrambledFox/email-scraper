@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Example;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,10 +14,11 @@ import org.springframework.web.client.RestTemplate;
 
 import nl.jorislodewijks.emailscraper.model.Comment;
 import nl.jorislodewijks.emailscraper.model.EmailAddress;
+import nl.jorislodewijks.emailscraper.repository.CommentRepository;
 import nl.jorislodewijks.emailscraper.repository.EmailRepository;
 
 @RestController
-@RequestMapping("/posts/{postId}/comments")
+@RequestMapping
 public class CommentController {
 
     @Autowired
@@ -30,7 +30,15 @@ public class CommentController {
     @Autowired
     private EmailRepository emailRepository;
 
-    @GetMapping
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @GetMapping("/comments")
+    public List<Comment> getComments() {
+        return commentRepository.findAll();
+    }
+
+    @GetMapping("/posts/{postId}/comments")
     public List<Comment> getComments(@PathVariable Long postId) {
         String url = baseApiUrl + "/" + postId + "/comments";
         ResponseEntity<Comment[]> responseEntity = restTemplate.getForEntity(url, Comment[].class);
@@ -47,7 +55,15 @@ public class CommentController {
             emailRepository.save(email);
         });
 
+        // Save comments
+        commentRepository.saveAll(comments);
+
         return comments;
     }
 
+    @GetMapping("/emails/{emailAddress}/comments")
+    public List<Comment> getCommentsByEmailAddress(@PathVariable String emailAddress) {
+        List<Comment> comments = commentRepository.findAllByEmail(emailAddress);
+        return comments;
+    }
 }
